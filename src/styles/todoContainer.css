@@ -4,25 +4,74 @@
     justify-content: center;
     align-items: center;
     margin-top: 80px;
+    margin-bottom: 80px;
+    font-family: Arial;
 }
 
 .input-text{
     display: inline;
     margin-bottom: 0px;
+    height: 30px;
+    width: 400px;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: solid;
+    border-width: 1px;
+    border-color: rgb(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.input-text:hover{
+    border-color: orange;
+}
+
+.input-text:focus{
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: orange;
+    /* outline-offset: 1px; */
+}
+
+
 .input-button{
-    display: block;
     margin-top: 20px;
     margin-bottom: 0px;
+
+    font-size: 18px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top:8px;
+    padding-bottom: 8px;
+
+    border: solid;
+    background-color: rgb(1, 101, 225);
+    background-color: rgb(23, 169, 253);
+    border-color: rgb(23, 169, 253);
+    color: white;
+    border-radius: 20px;
+    border-width: 1px;
+    box-shadow: 0px 5px 10px rgb(0, 0, 0, 0.3);
+    transition: box-shadow 300ms, margin-left 300ms;
+    cursor: pointer;
+}
+
+.input-button:hover{
+    background-color: white;
+    color: rgb(23, 169, 253);
+}
+
+.input-button:active{
+    margin-left: 5px;
+    box-shadow: none;
 }
 
 .todos{
     margin-top: 20px;
-    background-color: pink;
+    background-color: rgba(223, 223, 223, 0.3);
     width: 800px;
-    border: solid;
+    border: none;
     border-width: 100%;  
+    border-radius: 5px;
     
     display: flex;
     align-items: center;
@@ -35,6 +84,13 @@
 
 .task{
     width: 800px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 20px;
+    white-space: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
 }
 
 .checkbox{
@@ -43,5 +99,24 @@
 
 .delete-button{
     margin-left: 20px;
-
+    background-color: rgb(255, 31, 31);
+    color: white;
+    border: none;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 150ms;
 }
+
+.delete-button:hover{
+    opacity: 0.7;
+}
+
+/* .delete-button:active{
+    margin-left: 5px; to be checked this animation
+    box-shadow: none;
+} */

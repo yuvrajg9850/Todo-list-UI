@@ -9,12 +9,15 @@ function TodoContainer() {
   const [allTodos, setAllTodos] = useState([]);
 
   function writeTodo(e) {
-    setInputVal(e.target.value);
+      setInputVal(e.target.value);
   }
 
   function addAllTodos() {
-    setAllTodos([...allTodos, inputValue]);
-    setInputVal('');
+    if (inputValue.length > 0)
+    {
+      setAllTodos([...allTodos, inputValue]);
+      setInputVal('');
+    }
   }
 
   useEffect(() => {
@@ -37,6 +40,12 @@ function TodoContainer() {
     );
   }
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      document.getElementById("myButton").click();
+    }
+  };
+  
   return (
     <>
       <div className="container">
@@ -45,8 +54,9 @@ function TodoContainer() {
           value={inputValue}
           onChange={writeTodo}
           placeholder="Enter your text here"
+          onKeyDown={handleKeyPress}
         />
-        <button className="input-button" onClick={addAllTodos}>
+        <button id="myButton" className="input-button" onClick={addAllTodos}>
           Add Task
         </button>
         {allTodos.map((todo, index) => {
