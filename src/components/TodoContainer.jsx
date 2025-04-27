@@ -22,17 +22,16 @@ function TodoContainer() {
 
   useEffect(() => {
     const retriveTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
-    if (retriveTodos.length > 0)
+    if (retriveTodos.length != 0){
       setAllTodos(retriveTodos)
+    }
   }, []);//On pageload
 
   useEffect(() =>{
-    if (allTodos.length > 0)
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allTodos))
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allTodos))
   }, [allTodos]);//when the stateVariable changes
 
   function deleteTodo(id) {
-    console.log(id)
     setAllTodos((allTodos) => 
       allTodos.filter((todo, index) => {
         return id != index;
