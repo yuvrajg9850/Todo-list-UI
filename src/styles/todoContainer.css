@@ -1,0 +1,47 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+}
+
+.input-text{
+    display: inline;
+    margin-bottom: 0px;
+}
+
+.input-button{
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+.todos{
+    margin-top: 20px;
+    background-color: pink;
+    width: 800px;
+    border: solid;
+    border-width: 100%;  
+    
+    display: flex;
+    align-items: center;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.task{
+    width: 800px;
+}
+
+.checkbox{
+    margin-left: 20px;
+}
+
+.delete-button{
+    margin-left: 20px;
+
+}
