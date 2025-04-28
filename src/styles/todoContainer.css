@@ -19,6 +19,13 @@
     margin-bottom: 200px;
     height: 800px;
     overflow: auto;
+    padding-bottom: 20px;
+    border: solid;
+    border-width: 1px;
+    border-color: rgb(217, 217, 217, 0.9);
+    border-radius: 5px;
+    border-left-width: 0px;
+    border-right-width: 0px;
     /* background-color: pink; */
 }
 
