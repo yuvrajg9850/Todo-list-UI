@@ -102,7 +102,13 @@ function TodoContainer() {
           })}
         </div>
         <div className="completion">
-          <div>6/10 Remaing</div>
+          <div className="completion-heading">Total</div>
+          <div className="completion-stats">
+            <div className="completion-done">6</div>
+            <div>/</div>
+            <div className="completion-todo">10</div>
+          </div>
+          <div className="completion-percentage">50%</div>
         </div>
       </div>
     </>
