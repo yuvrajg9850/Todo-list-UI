@@ -2,37 +2,35 @@ import React, { useState, useEffect } from "react";
 import "../styles/todoContainer.css";
 
 function TodoContainer() {
-
-  const LOCAL_STORAGE_KEY = "todo-list" 
+  const LOCAL_STORAGE_KEY = "todo-list";
 
   const [inputValue, setInputVal] = useState("");
   const [allTodos, setAllTodos] = useState([]);
 
   function writeTodo(e) {
-      setInputVal(e.target.value);
+    setInputVal(e.target.value);
   }
 
   function addAllTodos() {
-    if (inputValue.length > 0)
-    {
+    if (inputValue.length > 0) {
       setAllTodos([...allTodos, inputValue]);
-      setInputVal('');
+      setInputVal("");
     }
   }
 
   useEffect(() => {
-    const retriveTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
-    if (retriveTodos.length != 0){
-      setAllTodos(retriveTodos)
+    const retriveTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    if (retriveTodos.length != 0) {
+      setAllTodos(retriveTodos);
     }
-  }, []);//On pageload
+  }, []); //On pageload
 
-  useEffect(() =>{
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allTodos))
-  }, [allTodos]);//when the stateVariable changes
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allTodos));
+  }, [allTodos]); //when the stateVariable changes
 
   function deleteTodo(id) {
-    setAllTodos((allTodos) => 
+    setAllTodos((allTodos) =>
       allTodos.filter((todo, index) => {
         return id != index;
       })
@@ -44,29 +42,68 @@ function TodoContainer() {
       document.getElementById("myButton").click();
     }
   };
-  
+
   return (
     <>
-      <div className="container">
-        <input
-          className="input-text"
-          value={inputValue}
-          onChange={writeTodo}
-          placeholder="Enter your text here"
-          onKeyDown={handleKeyPress}
-        />
-        <button id="myButton" className="input-button" onClick={addAllTodos}>
-          Add Task
-        </button>
-        {allTodos.map((todo, index) => {
-          return (
-            <div className="todos" key={index}> 
-              <div className="task">{index+1}. {todo}</div>
-              <input className="checkbox" type="checkbox" />
-              <button className="delete-button" onClick={() => deleteTodo(index)}>Delete</button>
-            </div>
-          );
-        })}
+      <div className="container-layout">
+        <div className="all-projects">
+          <div className="project">All Projects</div>
+          <button className="project-button">Todo App</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">Feature Flag Management - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+          <button className="project-button">11Feature Flag Manssagement - BE + UI</button>
+        </div>
+        <div className="container">
+          <input
+            className="input-text"
+            value={inputValue}
+            onChange={writeTodo}
+            placeholder="Enter your text here"
+            onKeyDown={handleKeyPress}
+          />
+          <button id="myButton" className="input-button" onClick={addAllTodos}>
+            Add Task
+          </button>
+          {allTodos.map((todo, index) => {
+            return (
+              <div className="todos" key={index}>
+                <div className="task">
+                  {index + 1}. {todo}
+                </div>
+                <input className="checkbox" type="checkbox" />
+                <button
+                  className="delete-button"
+                  onClick={() => deleteTodo(index)}
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        <div className="completion">
+          <div>6/10 Remaing</div>
+        </div>
       </div>
     </>
   );

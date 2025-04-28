@@ -1,11 +1,76 @@
+.container-layout{
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    /* align-items: center; */
+    margin-top: 80px;
+    margin-bottom: 80px;
+    font-family: Arial; 
+    /* background-color: purple; */
+}
+
+.all-projects{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial;
+    margin-left: 80px;
+    margin-right: 10px;
+    margin-top: 50px;
+    margin-bottom: 200px;
+    height: 800px;
+    overflow: auto;
+    /* background-color: pink; */
+}
+
 .container{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin-top: 80px;
-    margin-bottom: 80px;
     font-family: Arial;
+}
+
+.completion{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    font-family: Arial;
+    background-color: pink;  
+    margin-top: 50px;
+    height: 400px;
+}
+
+.project{
+    font-family: Arial;
+    text-decoration: underline;
+    /* border-bottom-width: 1px;
+    border-bottom: solid; */
+    font-size: 20px;
+    margin-bottom: 0px;
+}
+
+.project-button{
+    background-color: rgb(46, 196, 16);
+    margin-top: 20px;
+    padding: 5px 8px 5px 5px;
+    font-size: 16px;
+    font-family: Arial;
+    color: white;
+    border-radius: 10px;
+    width: 150px;    
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition:  opacicty 150ms, box-shadow 150ms;
+    box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.project-button:hover{
+    opacity: 0.7;
+}
+.project-button:active{
+    margin-left: 5px;
+    box-shadow: none;
 }
 
 .input-text{
