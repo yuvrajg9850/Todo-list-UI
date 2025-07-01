@@ -19,15 +19,16 @@ function TodoContainer() {
   }
 
   useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allTodos));
+  }, [allTodos]); //when the stateVariable changes
+
+  useEffect(() => {
     const retriveTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    console.log(retriveTodos)
     if (retriveTodos.length != 0) {
       setAllTodos(retriveTodos);
     }
   }, []); //On pageload
-
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allTodos));
-  }, [allTodos]); //when the stateVariable changes
 
   function deleteTodo(id) {
     setAllTodos((allTodos) =>
