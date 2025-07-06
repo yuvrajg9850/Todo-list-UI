@@ -6,6 +6,7 @@ function ProjectTaskContainer() {
 
   const [inputValue, setInputVal] = useState("");
   const [projectIdValue, setProjectIdValue] = useState(0);
+  const [taskIdValue, setTaskIdValue] = useState(0);
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
   
@@ -27,8 +28,17 @@ function ProjectTaskContainer() {
 
   }, [])
 
+  useEffect(() => {
+      console.log('ola', projectIdValue)
+    if (projectIdValue !== 0){
+        getTasks(projectIdValue)
+    }
+  }, [taskIdValue, projectIdValue])
+
+
+
   function getTasks(projectId){
-    console.log('projects', projects)
+    setLoadingTasks(true)
     axios.get(`https://localhost:7001/api/v1/tasks?projectId=${projectId}`).then(response => {
       setTasks(response.data)
       setLoadingTasks(false)
@@ -37,11 +47,29 @@ function ProjectTaskContainer() {
         setTasks([])
       console.log('Error fetching tasks.', error)
     })
+    setLoadingTasks(false)
+  }
+
+  function addTask() {
+    let title = inputValue
+    axios.post('https://localhost:7001/api/v1/Tasks', {
+        title: title,
+        description: 'No Descriptoin',
+        projectId: projectIdValue
+      })
+      .then(response => {setTaskIdValue(response.data.id)
+      console.log('Task created:', response)
+    })
+      .catch(error => console.error('Error:', error));    
+    setInputVal("")
+  }
+
+
+  function captureTitle(e){
+    const title = e.target.value
+    setInputVal(title);
   }
   
-  function writeTodo(e) {
-    setInputVal(e.target.value);
-  }
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -50,9 +78,7 @@ function ProjectTaskContainer() {
   };
 
   function selectProject(projectId){
-    setLoadingTasks(true)
     setProjectIdValue(projectId)
-    getTasks(projectId)
   }
 
   return (
@@ -70,11 +96,11 @@ function ProjectTaskContainer() {
           <input
             className="input-text"
             value={inputValue}
-            onChange={writeTodo}
+            onChange={captureTitle}
             placeholder="Enter your text here"
             onKeyDown={handleKeyPress}
           />
-          <button id="myButton" className="input-button">
+          <button id="myButton" className="input-button" onClick={() => addTask()}>
             Add Task
           </button>
           <div>
