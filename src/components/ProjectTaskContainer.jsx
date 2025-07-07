@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/todoContainer.css";
-import Task from "./Task";
 
 function ProjectTaskContainer() {
   const [inputValue, setInputVal] = useState("");
@@ -10,6 +9,7 @@ function ProjectTaskContainer() {
   const [taskIdValue, setTaskIdValue] = useState(0);
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [taskStats, setStats] = useState([0, 0, 10]);
 
   const [tasks, setTasks] = useState([]);
   const [loadingTasks, setLoadingTasks] = useState(true);
@@ -80,10 +80,30 @@ function ProjectTaskContainer() {
     setTaskRefresh(!taskRefresh);
   }
 
+  function updateTask(task){
+    setLoadingTasks(true);
+    axios
+      .put(`https://localhost:7001/api/v1/Tasks/${task.id}`, {
+        title: task.title,
+        description: task.description,
+        isCompleted: !task.isCompleted,
+        projectId: projectIdValue,
+      })
+      .then((response) => {
+        setTaskRefresh(!taskRefresh);
+        console.log("Task updated:", response);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
   function captureTitle(e) {
     const title = e.target.value;
     setInputVal(title);
   }
+
+  function changeCompleteStatus(task){
+    updateTask(task)
+  } 
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -109,7 +129,6 @@ function ProjectTaskContainer() {
                 key={project.id}
                 onClick={() => selectProject(project.id)}
               >
-                {" "}
                 {project.title}
               </button>
             ))
@@ -133,12 +152,16 @@ function ProjectTaskContainer() {
           {loadingTasks ? (
             <p>loading...</p>
           ) : tasks.length ? (
-            tasks.map((task, index) => (
-                //<Task task={task} index={index}></Task>
-                <div className="todos" key={index}>
+            tasks
+            .sort((a, b) => new Date(b.createdTs) - new Date(a.createdTs))
+            .map((task, index) => (
+              <div className="todos" key={index}>
                 <div className="task">
                   {index + 1}. {task.title}
-                  <input className="checkbox" type="checkbox" />
+                  <input className="checkbox"
+                   checked={task.isCompleted}
+                   onChange={() => changeCompleteStatus(task)}
+                   type="checkbox" />
                   <button
                     className="delete-button"
                     onClick={() => deleteTask(task.id)}
@@ -148,16 +171,18 @@ function ProjectTaskContainer() {
                 </div>
               </div>
             ))
-          ) : (<p>no task found</p>)}
+          ) : (
+            <p>no task found</p>
+          )}
         </div>
         <div className="completion">
           <div className="completion-heading">Total</div>
           <div className="completion-stats">
-            <div className="completion-done">6</div>
+            <div className="completion-done">{taskStats[0] = tasks.filter((t) => t.isCompleted === true).length}</div>
             <div>/</div>
-            <div className="completion-todo">10</div>
+            <div className="completion-todo">{taskStats[1] = tasks.length}</div>
           </div>
-          <div className="completion-percentage">50%</div>
+          <div className="completion-percentage">{taskStats[2] = ((taskStats[0]/taskStats[1])*100).toFixed(2)}</div>
         </div>
       </div>
     </>
