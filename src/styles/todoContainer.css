@@ -218,6 +218,37 @@
     opacity: 0.7;
 }
 
+.input-project-container{
+    height: 100px;
+    width: 150px;    
+    padding-top: 10px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.input-project-text{
+    height: 20px;
+    width: 150px;
+    margin-top: 15px;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: solid;
+    border-width: 1px;
+    border-color: rgb(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-project-text:hover{
+    border-color: orange;
+}
+
+.input-project-text:focus{
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: orange;
+    /* outline-offset: 1px; */
+}
+
 /* .delete-button:active{
     margin-left: 5px; to be checked this animation
     box-shadow: none;
