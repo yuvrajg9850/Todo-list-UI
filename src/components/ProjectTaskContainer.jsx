@@ -4,8 +4,10 @@ import "../styles/todoContainer.css";
 
 function ProjectTaskContainer() {
   const [inputValue, setInputVal] = useState("");
+  const [inputProjectValue, setInputProjectVal] = useState("");
   const [projectIdValue, setProjectIdValue] = useState(0);
   const [taskRefresh, setTaskRefresh] = useState(true);
+  const [projectRefresh, setProjectRefresh] = useState(true);
   const [taskIdValue, setTaskIdValue] = useState(0);
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
@@ -27,7 +29,7 @@ function ProjectTaskContainer() {
       .catch((error) => {
         console.log("Error fetching projects.", error);
       });
-  }, []);
+  }, [projectRefresh]);
 
   useEffect(() => {
     if (projectIdValue !== 0) {
@@ -51,6 +53,7 @@ function ProjectTaskContainer() {
   }
 
   function addTask() {
+    if (inputValue.length === 0) return;
     setLoadingTasks(true);
     let title = inputValue;
     axios
@@ -67,6 +70,25 @@ function ProjectTaskContainer() {
     setInputVal("");
   }
 
+  function addProject() {
+    if (inputProjectValue.length === 0) return;
+    setLoadingProjects(true);
+    let title = inputProjectValue;
+    axios
+      .post("https://localhost:7001/api/v1/projects", {
+        title: title,
+        description: "No Descriptoin",
+        type: "self",
+      })
+      .then((response) => {
+        setLoadingProjects(false);
+        setProjectRefresh(!projectRefresh);
+        console.log("Project created:", response);
+      })
+      .catch((error) => console.error("Error:", error));
+    setInputProjectVal("");
+  }
+
   function deleteTask(taskId) {
     setLoadingTasks(true);
     axios
@@ -80,7 +102,7 @@ function ProjectTaskContainer() {
     setTaskRefresh(!taskRefresh);
   }
 
-  function updateTask(task){
+  function updateTask(task) {
     setLoadingTasks(true);
     axios
       .put(`https://localhost:7001/api/v1/Tasks/${task.id}`, {
@@ -101,9 +123,14 @@ function ProjectTaskContainer() {
     setInputVal(title);
   }
 
-  function changeCompleteStatus(task){
-    updateTask(task)
-  } 
+  function captureProjectTitle(e) {
+    const title = e.target.value;
+    setInputProjectVal(title);
+  }
+
+  function changeCompleteStatus(task) {
+    updateTask(task);
+  }
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -120,6 +147,21 @@ function ProjectTaskContainer() {
       <div className="container-layout">
         <div className="all-projects">
           <div className="project">All Projects</div>
+          <div className="input-project-container">
+            <input
+              className="input-project-text"
+              value={inputProjectValue}
+              onChange={captureProjectTitle}
+              placeholder="Enter your project here"
+            />
+            <button
+              id="addProjectButton"
+              className="input-button"
+              onClick={() => addProject()}
+            >
+              Add Project
+            </button>
+          </div>
           {loadingProjects ? (
             <p>loading...</p>
           ) : (
@@ -139,7 +181,7 @@ function ProjectTaskContainer() {
             className="input-text"
             value={inputValue}
             onChange={captureTitle}
-            placeholder="Enter your text here"
+            placeholder="Enter your task here"
             onKeyDown={handleKeyPress}
           />
           <button
@@ -153,24 +195,26 @@ function ProjectTaskContainer() {
             <p>loading...</p>
           ) : tasks.length ? (
             tasks
-            .sort((a, b) => new Date(b.createdTs) - new Date(a.createdTs))
-            .map((task, index) => (
-              <div className="todos" key={index}>
-                <div className="task">
-                  {index + 1}. {task.title}
-                  <input className="checkbox"
-                   checked={task.isCompleted}
-                   onChange={() => changeCompleteStatus(task)}
-                   type="checkbox" />
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteTask(task.id)}
-                  >
-                    Delete
-                  </button>
+              .sort((a, b) => new Date(b.createdTs) - new Date(a.createdTs))
+              .map((task, index) => (
+                <div className="todos" key={index}>
+                  <div className="task">
+                    {index + 1}. {task.title}
+                    <input
+                      className="checkbox"
+                      checked={task.isCompleted}
+                      onChange={() => changeCompleteStatus(task)}
+                      type="checkbox"
+                    />
+                    <button
+                      className="delete-button"
+                      onClick={() => deleteTask(task.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
           ) : (
             <p>no task found</p>
           )}
@@ -178,11 +222,21 @@ function ProjectTaskContainer() {
         <div className="completion">
           <div className="completion-heading">Total</div>
           <div className="completion-stats">
-            <div className="completion-done">{taskStats[0] = tasks.filter((t) => t.isCompleted === true).length}</div>
+            <div className="completion-done">
+              {
+                (taskStats[0] = tasks.filter(
+                  (t) => t.isCompleted === true
+                ).length)
+              }
+            </div>
             <div>/</div>
-            <div className="completion-todo">{taskStats[1] = tasks.length}</div>
+            <div className="completion-todo">
+              {(taskStats[1] = tasks.length)}
+            </div>
           </div>
-          <div className="completion-percentage">{taskStats[2] = ((taskStats[0]/taskStats[1])*100).toFixed(2)}</div>
+          <div className="completion-percentage">
+            {(taskStats[2] = ((taskStats[0] / taskStats[1]) * 100).toFixed(2))}
+          </div>
         </div>
       </div>
     </>
