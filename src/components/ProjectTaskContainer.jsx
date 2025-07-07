@@ -1,46 +1,88 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/todoContainer.css";
+import Task from "./Task";
 
 function ProjectTaskContainer() {
-
   const [inputValue, setInputVal] = useState("");
   const [projectIdValue, setProjectIdValue] = useState(0);
+  const [taskRefresh, setTaskRefresh] = useState(true);
+  const [taskIdValue, setTaskIdValue] = useState(0);
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
-  
+
   const [tasks, setTasks] = useState([]);
   const [loadingTasks, setLoadingTasks] = useState(true);
 
   useEffect(() => {
-    axios.get('https://localhost:7001/api/v1/projects').then(response => {
-      setProjects(response.data)
-      setLoadingProjects(false)
-      if (response.data.length > 0){
-        setProjectIdValue(response.data[0].id)
-        getTasks(response.data[0].id)
-        setLoadingTasks(false)
-      }
-    }).catch(error => {
-      console.log('Error fetching projects.', error)
-    })
+    axios
+      .get("https://localhost:7001/api/v1/projects")
+      .then((response) => {
+        setProjects(response.data);
+        if (response.data.length > 0) {
+          setProjectIdValue(response.data[0].id);
+          setLoadingProjects(false);
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching projects.", error);
+      });
+  }, []);
 
-  }, [])
+  useEffect(() => {
+    if (projectIdValue !== 0) {
+      getTasks(projectIdValue);
+    }
+  }, [taskIdValue, projectIdValue, taskRefresh]);
 
-  function getTasks(projectId){
-    console.log('projects', projects)
-    axios.get(`https://localhost:7001/api/v1/tasks?projectId=${projectId}`).then(response => {
-      setTasks(response.data)
-      setLoadingTasks(false)
-    }).catch(error => {
-        setLoadingTasks(false)
-        setTasks([])
-      console.log('Error fetching tasks.', error)
-    })
+  function getTasks(projectId) {
+    setLoadingTasks(true);
+    axios
+      .get(`https://localhost:7001/api/v1/tasks?projectId=${projectId}`)
+      .then((response) => {
+        setTasks(response.data);
+        setLoadingTasks(false);
+      })
+      .catch((error) => {
+        setLoadingTasks(false);
+        setTasks([]);
+        console.log("Error fetching tasks.", error);
+      });
   }
-  
-  function writeTodo(e) {
-    setInputVal(e.target.value);
+
+  function addTask() {
+    setLoadingTasks(true);
+    let title = inputValue;
+    axios
+      .post("https://localhost:7001/api/v1/Tasks", {
+        title: title,
+        description: "No Descriptoin",
+        projectId: projectIdValue,
+      })
+      .then((response) => {
+        setTaskIdValue(response.data.id);
+        console.log("Task created:", response);
+      })
+      .catch((error) => console.error("Error:", error));
+    setInputVal("");
+  }
+
+  function deleteTask(taskId) {
+    setLoadingTasks(true);
+    axios
+      .delete(`https://localhost:7001/api/v1/Tasks/${taskId}`)
+      .then((response) => {
+        setTaskIdValue(response.data.id);
+        console.log("Task created:", response);
+      })
+      .catch((error) => console.error("Error:", error));
+    setInputVal("");
+    setTaskRefresh(!taskRefresh);
+  }
+
+  function captureTitle(e) {
+    const title = e.target.value;
+    setInputVal(title);
   }
 
   const handleKeyPress = (event) => {
@@ -49,10 +91,8 @@ function ProjectTaskContainer() {
     }
   };
 
-  function selectProject(projectId){
-    setLoadingTasks(true)
-    setProjectIdValue(projectId)
-    getTasks(projectId)
+  function selectProject(projectId) {
+    setProjectIdValue(projectId);
   }
 
   return (
@@ -60,52 +100,55 @@ function ProjectTaskContainer() {
       <div className="container-layout">
         <div className="all-projects">
           <div className="project">All Projects</div>
-          {loadingProjects ? <p>loading...</p> : (            
-              projects.map(project => 
-                (<button className="project-button" key={project.id} onClick={() => selectProject(project.id)}> {project.title}</button>)
-              )                       
+          {loadingProjects ? (
+            <p>loading...</p>
+          ) : (
+            projects.map((project) => (
+              <button
+                className="project-button"
+                key={project.id}
+                onClick={() => selectProject(project.id)}
+              >
+                {" "}
+                {project.title}
+              </button>
+            ))
           )}
-        </div> 
+        </div>
         <div className="container">
           <input
             className="input-text"
             value={inputValue}
-            onChange={writeTodo}
+            onChange={captureTitle}
             placeholder="Enter your text here"
             onKeyDown={handleKeyPress}
           />
-          <button id="myButton" className="input-button">
+          <button
+            id="myButton"
+            className="input-button"
+            onClick={() => addTask()}
+          >
             Add Task
           </button>
-          <div>
-            {loadingTasks ? (
-                <p>Loading...</p>
-            ) : (
-                    tasks.length > 0 ?
-                    <>
-                        {
-                        tasks.map((task, index) => (
-                        <div className="todos" key={index}>
-                            <div className="task">
-                            {index + 1}. {task.title}
-                            <input className="checkbox" type="checkbox" />
-                            <button
-                            className="delete-button"
-                            onClick={() => deleteTodo(index)}
-                            >
-                            Delete
-                            </button>
-                            </div>
-                        </div>
-                        ))}
-                    </>
-                    : 
-                    (
-                        <p>No tasks found.</p>
-                    )
-                ) 
-            }
-            </div>          
+          {loadingTasks ? (
+            <p>loading...</p>
+          ) : tasks.length ? (
+            tasks.map((task, index) => (
+                //<Task task={task} index={index}></Task>
+                <div className="todos" key={index}>
+                <div className="task">
+                  {index + 1}. {task.title}
+                  <input className="checkbox" type="checkbox" />
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteTask(task.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (<p>no task found</p>)}
         </div>
         <div className="completion">
           <div className="completion-heading">Total</div>
